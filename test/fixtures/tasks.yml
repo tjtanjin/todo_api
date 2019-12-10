@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  job_name: MyString
+  job_desc: MyString
+  category: MyString
+  tag: MyString
+  due: MyString
+
+two:
+  user: two
+  job_name: MyString
+  job_desc: MyString
+  category: MyString
+  tag: MyString
+  due: MyString
