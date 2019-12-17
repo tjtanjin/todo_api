@@ -4,7 +4,7 @@ class Api::V1::TasksController < ApplicationController
 
   # Get All Tasks
   def index
-    @tasks = Task.all
+    @tasks = User.find(params[:user_id]).task
     render json: @tasks
   end
 
