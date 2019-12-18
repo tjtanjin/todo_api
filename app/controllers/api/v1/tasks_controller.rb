@@ -18,8 +18,16 @@ class Api::V1::TasksController < ApplicationController
     @task = Task.new(task_params)
     if @task.save
       render json: @task
-    else
-      render json: { error: 'Unable to create task.' }, status: 400
+    elsif @task.errors.added? :job_name, :blank
+      render json: { error: "Task name cannot be blank!"}, status: 400
+    elsif @task.errors.added? :job_name, "has already been taken"
+      render json: { error: "Task already exist!"}, status: 400
+    elsif @task.errors.added? :job_desc, :blank
+      render json: { error: "Task description cannot be blank!"}, status: 400
+    elsif @task.errors.added? :category, :blank
+      render json: { error: "Category cannot be blank!"}, status: 400
+    else 
+      render json: { error: 'An unexpected error has occurred. Please contact an administrator.' }, status: 400
     end
   end
 
@@ -27,9 +35,17 @@ class Api::V1::TasksController < ApplicationController
   def update
     if @task
       @task.update(task_params)
-      render json: { message: 'Task successfully created.' }, status: 200
-    else
-      render json: { error: 'Unable to update task.' }, status: 400
+      render json: { message: 'Task successfully updated!' }, status: 200
+    elsif @task.errors.added? :job_name, :blank
+      render json: { error: "Task name cannot be blank!"}, status: 400
+    elsif @task.errors.added? :job_name, "has already been taken"
+      render json: { error: "Task already exist!"}, status: 400
+    elsif @task.errors.added? :job_desc, :blank
+      render json: { error: "Task description cannot be blank!"}, status: 400
+    elsif @task.errors.added? :category, :blank
+      render json: { error: "Category cannot be blank!"}, status: 400
+    else 
+      render json: { error: 'An unexpected error has occurred. Please contact an administrator.' }, status: 400
     end
   end
 
