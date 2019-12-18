@@ -18,9 +18,17 @@ class Api::V1::UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      render json: @user
-    else
-      render json: { error: 'Unable to create user.' }, status: 400
+      render json: @user, status: 200
+    elsif @user.errors.added? :name, :blank
+      render json: { error: "Username cannot be blank!"}, status: 400
+    elsif @user.errors.added? :email, :blank
+      render json: { error: "Email cannot be blank!"}, status: 400
+    elsif @user.errors.added? :email, "has already been taken"
+      render json: { error: "Email is already taken!"}, status: 400
+    elsif @user.errors.added? :password, :blank
+      render json: { error: "Password cannot be blank!"}, status: 400
+    else 
+      render json: { error: 'Password does not match!' }, status: 400
     end
   end
 
