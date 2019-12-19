@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 2019_12_09_211251) do
   enable_extension "plpgsql"
 
   create_table "tasks", force: :cascade do |t|
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.string "job_name"
     t.string "job_desc"
     t.string "category"
