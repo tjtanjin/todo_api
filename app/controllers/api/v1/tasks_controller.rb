@@ -34,18 +34,21 @@ class Api::V1::TasksController < ApplicationController
   # Update Task
   def update
     if @task
-      @task.update(task_params)
-      render json: { message: 'Task successfully updated!' }, status: 200
-    elsif @task.errors.added? :job_name, :blank
-      render json: { error: "Task name cannot be blank!"}, status: 400
-    elsif @task.errors.added? :job_name, "has already been taken"
-      render json: { error: "Task already exist!"}, status: 400
-    elsif @task.errors.added? :job_desc, :blank
-      render json: { error: "Task description cannot be blank!"}, status: 400
-    elsif @task.errors.added? :category, :blank
-      render json: { error: "Category cannot be blank!"}, status: 400
-    else 
-      render json: { error: 'An unexpected error has occurred. Please contact an administrator.' }, status: 400
+      if @task.update(task_params)
+        render json: { message: 'Task successfully updated!' }, status: 200
+      elsif @task.errors.added? :job_name, :blank
+        render json: { error: "Task name cannot be blank!"}, status: 400
+      elsif @task.errors.added? :job_name, "has already been taken"
+        render json: { error: "Task already exist!"}, status: 400
+      elsif @task.errors.added? :job_desc, :blank
+        render json: { error: "Task description cannot be blank!"}, status: 400
+      elsif @task.errors.added? :category, :blank
+        render json: { error: "Category cannot be blank!"}, status: 400
+      else 
+        render json: { error: 'An unexpected error has occurred. Please contact an administrator.' }, status: 400
+      end
+    else
+      render json: { error: 'Task not found.' }, status: 404
     end
   end
 
