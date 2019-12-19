@@ -1,6 +1,7 @@
 class Api::V1::TasksController < ApplicationController
   before_action :find_task, only: [:show, :update, :destroy]
-  before_action :authorize, only: [:update, :show, :destroy]  
+  before_action :authorize, only: [:index, :create]
+  before_action :authorize_task, only: [:update, :show, :destroy]  
 
   # Get All Tasks
   def index
@@ -73,6 +74,10 @@ class Api::V1::TasksController < ApplicationController
   end
 
   def authorize
+    return head(:unauthorized) unless current_user && current_user.can_modify_user?(params[:user_id])
+  end
+
+  def authorize_task
     return head(:unauthorized) unless current_user && current_user.can_modify_user?(@task.user_id)
   end
 
