@@ -73,7 +73,7 @@ class Api::V1::TasksController < ApplicationController
   end
 
   def authorize
-    return head(:unauthorized) unless current_user && current_user.can_modify_user?(params[:user_id])
+    return head(:unauthorized) unless current_user && current_user.can_modify_user?(@task.user_id)
   end
 
 end
