@@ -1,6 +1,6 @@
 class Api::V1::TasksController < ApplicationController
   before_action :find_task, only: [:show, :update, :destroy]
-  before_action :authorize, only: [:update, :index, :show, :create, :destroy]  
+  before_action :authorize, only: [:update, :show, :destroy]  
 
   # Get All Tasks
   def index
