@@ -1,6 +1,7 @@
 class Api::V1::UsersController < ApplicationController
   skip_before_action :authenticate_request, only: [:create]
   before_action :find_user, only: [:show, :update, :destroy]
+  before_action :authorize_as_admin, only: [:index]
   before_action :authorize, only: [:update, :index, :show, :destroy]
 
   # Get All Users
