@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   has_secure_password
-  has_many :task
+  has_many :task, dependent: :delete_all
   validates :email, presence: true, uniqueness: true
   validates :name, :password, presence: true
 
