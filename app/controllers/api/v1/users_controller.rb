@@ -1,7 +1,7 @@
 class Api::V1::UsersController < ApplicationController
   skip_before_action :authenticate_request, only: [:create]
   before_action :find_user, only: [:show, :update, :destroy]
-  before_action :authorize_as_admin, only: [:index]
+  before_action :authorize_as_admin, only: [:update, :index, :show, :destroy]
   before_action :authorize, only: [:update, :index, :show, :destroy]
 
   # Get All Users
@@ -37,7 +37,12 @@ class Api::V1::UsersController < ApplicationController
   # Update User
   def update
     if @user
-      @user.update(user_params)
+      if @user.role == "admin"
+        @user.assign_attributes(user_params)
+        @user.save(validate: false)
+      else
+        @user.update(user_params)
+      end
       render json: { message: 'User successfully updated.' }, status: 200
     else
       render json: { error: 'Unable to update user.' }, status: 400
