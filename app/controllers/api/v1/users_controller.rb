@@ -40,9 +40,10 @@ class Api::V1::UsersController < ApplicationController
       if current_user.role == "admin"
         @user.assign_attributes(user_params)
         @user.save(validate: false)
+        render json: { message: 'User successfully updated.' }, status: 200
       else
         if @user.update(user_params)
-          render json: { message: 'User successfully updated.' }, status: 200
+          render json: { message: 'Profile successfully updated.' }, status: 200
         else
           render json: { message: 'Incorrect password!' }, status: 400
         end
