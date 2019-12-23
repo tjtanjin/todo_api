@@ -41,9 +41,12 @@ class Api::V1::UsersController < ApplicationController
         @user.assign_attributes(user_params)
         @user.save(validate: false)
       else
-        @user.update(user_params)
+        if @user.update(user_params)
+          render json: { message: 'User successfully updated.' }, status: 200
+        else
+          render json: { message: 'Incorrect password!' }, status: 400
+        end
       end
-      render json: { message: 'User successfully updated.' }, status: 200
     else
       render json: { error: 'Unable to update user.' }, status: 400
     end
