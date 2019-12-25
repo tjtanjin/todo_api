@@ -20,7 +20,7 @@ class Api::V1::UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       UserNotifierMailer.send_signup_email(@user).deliver
-      render json: @user, status: 200
+      render json: AuthenticateUser.call(@user.email, @user.password).result, status: 200
     elsif @user.errors.added? :name, :blank
       render json: { error: "Username cannot be blank!"}, status: 400
     elsif @user.errors.added? :email, :blank
