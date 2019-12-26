@@ -19,16 +19,8 @@ class Api::V1::TasksController < ApplicationController
     @task = Task.new(task_params)
     if @task.save
       render json: @task
-    elsif @task.errors.added? :job_name, :blank
-      render json: { error: "Task name cannot be blank!"}, status: 400
-    elsif @task.errors.added? :job_name, "has already been taken"
-      render json: { error: "Task already exist!"}, status: 400
-    elsif @task.errors.added? :job_desc, :blank
-      render json: { error: "Task description cannot be blank!"}, status: 400
-    elsif @task.errors.added? :category, :blank
-      render json: { error: "Category cannot be blank!"}, status: 400
     else 
-      render json: { error: 'An unexpected error has occurred. Please contact an administrator.' }, status: 400
+      render json: { error: @task.errors.full_messages[0] }, status: 400
     end
   end
 
@@ -37,16 +29,8 @@ class Api::V1::TasksController < ApplicationController
     if @task
       if @task.update(task_params)
         render json: { message: 'Task successfully updated!' }, status: 200
-      elsif @task.errors.added? :job_name, :blank
-        render json: { error: "Task name cannot be blank!"}, status: 400
-      elsif @task.errors.added? :job_name, "has already been taken"
-        render json: { error: "Task already exist!"}, status: 400
-      elsif @task.errors.added? :job_desc, :blank
-        render json: { error: "Task description cannot be blank!"}, status: 400
-      elsif @task.errors.added? :category, :blank
-        render json: { error: "Category cannot be blank!"}, status: 400
       else 
-        render json: { error: 'An unexpected error has occurred. Please contact an administrator.' }, status: 400
+        render json: { error: @task.errors.full_messages[0] }, status: 400
       end
     else
       render json: { error: 'Task not found.' }, status: 404
@@ -66,7 +50,7 @@ class Api::V1::TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:job_name, :job_desc, :category, :tag, :due, :user_id)
+    params.require(:task).permit(:task_name, :task_description, :category, :priority, :deadline, :user_id)
   end
 
   def find_task

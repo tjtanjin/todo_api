@@ -1,6 +1,6 @@
 class Task < ApplicationRecord
   belongs_to :user
-  validates :job_name, presence: true, uniqueness: {scope: :user_id}
-  validates :job_desc, :category, presence: true
+  validates :task_name, presence: true, uniqueness: {scope: :user_id}
+  validates :task_description, :category, presence: true
 
 end
