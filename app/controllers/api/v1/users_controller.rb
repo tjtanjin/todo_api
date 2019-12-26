@@ -21,16 +21,8 @@ class Api::V1::UsersController < ApplicationController
     if @user.save
       UserNotifierMailer.send_signup_email(@user).deliver
       render json: AuthenticateUser.call(@user.email, @user.password).result, status: 200
-    elsif @user.errors.added? :name, :blank
-      render json: { error: "Username cannot be blank!"}, status: 400
-    elsif @user.errors.added? :email, :blank
-      render json: { error: "Email cannot be blank!"}, status: 400
-    elsif @user.errors.added? :email, "has already been taken"
-      render json: { error: "Email is already taken!"}, status: 400
-    elsif @user.errors.added? :password, :blank
-      render json: { error: "Password cannot be blank!"}, status: 400
     else 
-      render json: { error: 'Password does not match!' }, status: 400
+      render json: { error: @user.errors.full_messages[-1] }, status: 400
     end
   end
 
@@ -45,7 +37,7 @@ class Api::V1::UsersController < ApplicationController
         if @user.update(user_params)
           render json: { message: 'Profile successfully updated.' }, status: 200
         else
-          render json: { message: 'Incorrect password!' }, status: 400
+          render json: { error: @user.errors.full_messages[-1] }, status: 400
         end
       end
     else
