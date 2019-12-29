@@ -2,7 +2,8 @@ class User < ApplicationRecord
   has_secure_password
   has_many :task, dependent: :delete_all
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP } 
-  validates :name, :password, presence: true
+  validates :password, presence: true, length: { minimum: 6 }
+  validates :name, presence: true, length: { minimum: 2, maximum: 24, }
   validate :password_requirements_are_met
 
   def can_modify_user?(user_id)
