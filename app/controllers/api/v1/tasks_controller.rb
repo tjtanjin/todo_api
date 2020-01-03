@@ -6,6 +6,12 @@ class Api::V1::TasksController < ApplicationController
   # Get All Tasks
   def index
     @tasks = User.find(params[:user_id]).task
+    @tasks.each do |task|
+      if task.deadline < Time.current.beginning_of_day
+        task.priority = "Overdue"
+        task.save
+      end
+    end
     render json: @tasks
   end
 
