@@ -7,7 +7,7 @@ class Api::V1::TasksController < ApplicationController
   def index
     @tasks = User.find(params[:user_id]).task
     @tasks.each do |task|
-      if task.deadline < Time.current.beginning_of_day
+      if task.deadline < Time.current.beginning_of_day and task.priority != "Completed"
         task.priority = "Overdue"
         task.save
       end
