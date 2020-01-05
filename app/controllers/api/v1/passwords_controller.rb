@@ -3,7 +3,7 @@ class Api::V1::PasswordsController < ApplicationController
 
 	def forgot
 	  if params[:email].blank? # check if email is present
-	    return render json: {error: 'Email not present'}
+	    return render json: {error: 'Please enter your email'}, status: 400
 	  end
 
 	  @user = User.find_by(email: params[:email]) # if present find user by email
@@ -11,29 +11,49 @@ class Api::V1::PasswordsController < ApplicationController
 	  if @user.present?
 	    @user.generate_password_token! #generate pass token
 	    UserNotifierMailer.send_reset_password_email(@user).deliver
-	    render json: {status: 'ok'}, status: 200
+	    return render json: {message: 'Password reset token sent!'}, status: 200
 	  else
-	    render json: {error: ['Email address not found. Please check and try again.']}, status: 404
+	    return render json: {error: ['Email address not found. Please check and try again.']}, status: 404
 	  end
 	end
 
 	def reset
-	  token = params[:token].to_s
+	  if params[:token].blank?
+	  	return render json: {error: 'Please enter your password reset token'}, status: 400
+	  else
+	  	token = params[:token].to_s
+	  end
 
 	  if params[:email].blank?
-	    return render json: {error: 'Token not present'}
+	    return render json: {error: 'An error has occurred, please try to generate a new token or contact an administrator.'}, status: 400
+	  end
+
+	  if params[:password].blank?
+	  	return render json: {error: 'Please enter your new password'}, status: 400
 	  end
 
 	  @user = User.find_by(reset_password_token: token)
 
+	  def reset_password!(password)
+    self.reset_password_token = nil
+    self.password = password
+    if self.save!
+      return true
+    else
+      return false
+    end
+  end
+
 	  if @user.present? && @user.password_token_valid?
-	    if @user.reset_password!(params[:password])
-	      render json: {status: 'ok'}, status: 200
+	 	  @user.reset_password_token = nil
+      @user.password = params[:password]
+	    if @user.save
+	      render json: {message: 'Password reset successful!'}, status: 200
 	    else
-	      render json: {error: @user.errors.full_messages}, status: :unprocessable_entity
+	      render json: {error: @user.errors.full_messages[-1]}, status: 400
 	    end
 	  else
-	    render json: {error:  ['Link not valid or expired. Try generating a new link.']}, status: 404
+	    render json: {error:  ['Token not valid or expired. Try generating a new token.']}, status: 404
 	  end
 
 	end
