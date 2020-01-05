@@ -49,6 +49,7 @@ class Api::V1::UsersController < ApplicationController
   def destroy
     if @user
       @user.destroy
+      UserNotifierMailer.send_farewell_email(@user).deliver
       render json: { message: 'User successfully deleted.' }, status: 200
     else
       render json: { error: 'Unable to delete user.' }, status: 400
