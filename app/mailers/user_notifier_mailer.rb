@@ -7,4 +7,10 @@ class UserNotifierMailer < ApplicationMailer
     mail( :to => @user.email ,
     :subject => 'Welcome to Todo Manager!' )
   end
+
+  def send_reset_password_email(user)
+  	@user = user
+  	mail( :to => @user.email ,
+  	:subject => 'Todo Manager Password Reset')
+  end
 end
