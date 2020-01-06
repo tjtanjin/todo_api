@@ -45,4 +45,24 @@ class User < ApplicationRecord
   def generate_token
    SecureRandom.hex(10)
   end
+
+  def self.send_reminders
+    @users = User.all
+    @users.each do |user|
+      if user.notifications === "1"
+        @tasks = user.task
+        expiringtasks = Hash.new
+        @tasks.each do |task|
+          days_left = (Date.strptime(task.deadline.to_s, '%Y-%m-%d') - DateTime.now).to_i
+          if days_left === 3
+            expiringtasks[task.task_name] = 3
+          elsif days_left === 1
+            expiringtasks[task.task_name] = 1
+          else
+          end
+        end
+        UserNotifierMailer.send_reminder_email(user, expiringtasks).deliver
+      end
+    end
+  end
 end

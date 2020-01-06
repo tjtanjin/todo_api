@@ -19,4 +19,11 @@ class UserNotifierMailer < ApplicationMailer
     mail( :to => @user.email ,
     :subject => '[Todo Manager] See you again!')
   end
+
+  def send_reminder_email(user, expiringtasks)
+    @user = user
+    @expiringtasks = expiringtasks
+    mail( :to => @user.email ,
+    :subject => '[Todo Manager] Task Reminder')
+  end
 end
