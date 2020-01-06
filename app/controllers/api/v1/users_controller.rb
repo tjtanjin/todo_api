@@ -1,8 +1,8 @@
 class Api::V1::UsersController < ApplicationController
   skip_before_action :authenticate_request, only: [:create]
-  before_action :find_user, only: [:show, :update, :destroy]
+  before_action :find_user, only: [:show, :update, :destroy, :setnotifications]
   before_action :authorize_as_admin, only: [:index]
-  before_action :authorize, only: [:update, :index, :show, :destroy]
+  before_action :authorize, only: [:update, :index, :show, :destroy, :setnotifications]
 
   # Get All Users
   def index
@@ -53,6 +53,15 @@ class Api::V1::UsersController < ApplicationController
       render json: { message: 'User successfully deleted.' }, status: 200
     else
       render json: { error: 'Unable to delete user.' }, status: 400
+    end
+  end
+
+  def setnotifications
+    @user.notifications = params[:notifications]
+    if @user.save(validate: false)
+      render json: { message: 'Notifications settings successfully updated.' }, status: 200
+    else
+      render json: { error: @user.errors.full_messages }, status: 400
     end
   end
 

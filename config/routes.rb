@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       post 'password/forgot', to: 'passwords#forgot'
       post 'password/reset', to: 'passwords#reset'
       resources :users do
+      	put 'setnotifications', to: 'users#setnotifications'
         resources :tasks
       end
     end

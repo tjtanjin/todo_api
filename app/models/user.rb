@@ -54,9 +54,9 @@ class User < ApplicationRecord
         expiringtasks = Hash.new
         @tasks.each do |task|
           days_left = (Date.strptime(task.deadline.to_s, '%Y-%m-%d') - DateTime.now).to_i
-          if days_left === 3
+          if days_left === 3 and task.priority != "Completed" and task.priority != "Overdue"
             expiringtasks[task.task_name] = 3
-          elsif days_left === 1
+          elsif days_left === 1 and task.priority != "Completed" and task.priority != "Overdue"
             expiringtasks[task.task_name] = 1
           else
           end
