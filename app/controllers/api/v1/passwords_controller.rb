@@ -34,16 +34,6 @@ class Api::V1::PasswordsController < ApplicationController
 
 	  @user = User.find_by(reset_password_token: token)
 
-	  def reset_password!(password)
-    self.reset_password_token = nil
-    self.password = password
-    if self.save!
-      return true
-    else
-      return false
-    end
-  end
-
 	  if @user.present? && @user.password_token_valid?
 	 	  @user.reset_password_token = nil
       @user.password = params[:password]
