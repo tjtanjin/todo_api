@@ -40,6 +40,16 @@ class User < ApplicationRecord
     (self.reset_password_sent_at + 4.hours) > Time.now.utc
   end
 
+  def generate_verification_token!
+    self.verification_token = generate_token
+    self.verification_sent_at = Time.now.utc
+    self.save(validate: false)
+  end
+
+  def verification_token_valid?
+    (self.verification_sent_at + 4.hours) > Time.now.utc
+  end
+
   private
 
   def generate_token
@@ -59,7 +69,10 @@ class User < ApplicationRecord
           else
           end
         end
-        UserNotifierMailer.send_reminder_email(user, expiringtasks).deliver
+        if not expiringtasks.blank? 
+          UserNotifierMailer.send_reminder_email(user, expiringtasks).deliver
+        else
+        end
       end
     end
   end

@@ -4,6 +4,8 @@ Rails.application.routes.draw do
       post 'authenticate', to: 'authentication#authenticate'
       post 'password/forgot', to: 'passwords#forgot'
       post 'password/reset', to: 'passwords#reset'
+      post 'sendverification', to: 'users#sendverification'
+      post 'verify', to: 'users#checkverification'
       resources :users do
       	put 'setnotifications', to: 'users#setnotifications'
         resources :tasks

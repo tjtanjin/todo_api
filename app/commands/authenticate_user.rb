@@ -7,7 +7,7 @@ class AuthenticateUser
   end
 
   def call
-    { auth_token: JsonWebToken.encode(user_id: user.id), userName: user.name, isAdmin: user.role === "admin", isLoggedIn: true } if user
+    { auth_token: JsonWebToken.encode(user_id: user.id), userName: user.name, isAdmin: user.role === "admin", isLoggedIn: true, isVerified: user.verification_token == "1" } if user
   end
 
   private
