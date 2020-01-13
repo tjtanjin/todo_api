@@ -1,8 +1,8 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :authenticate_request, only: [:create, :sendverification, :checkverification]
-  before_action :find_user, only: [:show, :update, :destroy, :setnotifications]
+  skip_before_action :authenticate_request, only: [:create, :sendverification, :checkverification, :sendtelegram, :checktelegram]
+  before_action :find_user, only: [:show, :update, :destroy, :setemailnotifications, :settelegramnotifications, :settelegramhandle]
   before_action :authorize_as_admin, only: [:index]
-  before_action :authorize, only: [:update, :index, :show, :destroy, :setnotifications]
+  before_action :authorize, only: [:update, :index, :show, :destroy, :setemailnotifications, :settelegramnotifications, :settelegramhandle]
 
   # Get All Users
   def index
@@ -57,8 +57,17 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-  def setnotifications
-    @user.notifications = params[:notifications]
+  def setemailnotifications
+    @user.email_notifications = params[:email_notifications]
+    if @user.save(validate: false)
+      render json: { message: 'Notifications settings successfully updated.' }, status: 200
+    else
+      render json: { error: @user.errors.full_messages }, status: 400
+    end
+  end
+
+  def settelegramnotifications
+    @user.telegram_notifications = params[:telegram_notifications]
     if @user.save(validate: false)
       render json: { message: 'Notifications settings successfully updated.' }, status: 200
     else
@@ -88,7 +97,7 @@ class Api::V1::UsersController < ApplicationController
 
   def checkverification
     if params[:token].blank?
-      return render json: {error: 'Please enter your verification token'}, status: 400
+      return render json: {error: 'Verification token not found'}, status: 400
     else
       token = params[:token].to_s
     end
@@ -105,7 +114,40 @@ class Api::V1::UsersController < ApplicationController
     else
       render json: {error:  ['Token not valid or expired. Login and click on the "Resend Verification Link" button again to generate a new token.']}, status: 404
     end
+  end
 
+  def settelegramhandle
+    @user.telegram_handle = params[:telegram_handle]
+    if @user.save(validate: false)
+      render json: { message: 'Telegram handle successfully updated.' }, status: 200
+    else
+      render json: { error: @user.errors.full_messages }, status: 400
+    end
+  end
+
+  def checktelegram
+    if params[:email].blank?
+      return render json: {error: 'Email not found'}, status: 400
+    else
+    end
+
+    @user = User.find_by(email: params[:email])
+
+    if @user.present? && (@user.telegram_handle == params[:telegram_handle])
+      if @user.telegram_id != nil
+        render json: {message: "Account already linked"}, status: 403
+        return ;
+      else
+      end
+      @user.telegram_id = params[:telegram_id]
+      if @user.save(validate: false)
+        render json: {message: "Telegram successfully linked!"}, status: 200
+      else
+        render json: {error: @user.errors.full_messages[-1]}, status: 400
+      end
+    else
+      render json: {error:  ['User not found or telegram handle does not match.']}, status: 404
+    end
   end
 
   private

@@ -6,8 +6,11 @@ Rails.application.routes.draw do
       post 'password/reset', to: 'passwords#reset'
       post 'sendverification', to: 'users#sendverification'
       post 'verify', to: 'users#checkverification'
+      post 'link', to: 'users#checktelegram'
       resources :users do
-      	put 'setnotifications', to: 'users#setnotifications'
+      	put 'setemailnotifications', to: 'users#setemailnotifications'
+        put 'settelegramnotifications', to: 'users#settelegramnotifications'
+        put 'settelegramhandle', to: 'users#settelegramhandle'
         resources :tasks
       end
     end
