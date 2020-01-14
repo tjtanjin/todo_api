@@ -59,7 +59,7 @@ class User < ApplicationRecord
   def self.send_reminders
     @users = User.all
     @users.each do |user|
-      if user.notifications === "1"
+      if user.email_notifications === "1"
         @tasks = user.task
         expiringtasks = Hash.new
         @tasks.each do |task|
