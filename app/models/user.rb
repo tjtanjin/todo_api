@@ -62,8 +62,9 @@ class User < ApplicationRecord
       if user.email_notifications === "1"
         @tasks = user.task
         expiringtasks = Hash.new
+        currentDate = Date.today.in_time_zone("Singapore")
         @tasks.each do |task|
-          days_left = (Date.strptime(task.deadline.to_s, '%Y-%m-%d') - DateTime.now).to_i
+          days_left = (Date.strptime(task.deadline.to_s, '%Y-%m-%d') - Date.strptime(currentDate.to_s, '%Y-%m-%d')).to_i
           if days_left <= 3 and days_left >= 1 and task.priority != "Completed" and task.priority != "Overdue"
             expiringtasks[task.task_name] = days_left
           else
