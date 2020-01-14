@@ -139,7 +139,6 @@ class Api::V1::UsersController < ApplicationController
     @user = User.find_by(email: params[:email])
 
     if @user.present? && (@user.telegram_handle == params[:telegram_handle])
-      puts @user.telegram_id
       if @user.telegram_id != nil
         render json: {message: "Account already linked"}, status: 403
         return ;
