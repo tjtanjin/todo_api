@@ -117,6 +117,11 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def settelegramhandle
+    if @user.telegram_id != nil and @user.telegram_handle != params[:telegram_handle]
+      @user.telegram_id = nil
+      @user.telegram_notifications = "0"
+    else
+    end
     @user.telegram_handle = params[:telegram_handle]
     if @user.save(validate: false)
       render json: { message: 'Telegram handle successfully updated.' }, status: 200
@@ -134,6 +139,7 @@ class Api::V1::UsersController < ApplicationController
     @user = User.find_by(email: params[:email])
 
     if @user.present? && (@user.telegram_handle == params[:telegram_handle])
+      puts @user.telegram_id
       if @user.telegram_id != nil
         render json: {message: "Account already linked"}, status: 403
         return ;
