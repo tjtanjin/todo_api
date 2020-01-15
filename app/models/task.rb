@@ -10,4 +10,17 @@ class Task < ApplicationRecord
       errors.add(:deadline, "can't be in the past")
     end
   end 
+
+  def self.check_overdue
+    @tasks = Task.all
+    currentDate = Date.today.in_time_zone("Singapore")
+    @tasks.each do |task|
+      days_left = (Date.strptime(task.deadline.to_s, '%Y-%m-%d') - Date.strptime(currentDate.to_s, '%Y-%m-%d')).to_i
+      if days_left < 0 and task.priority != "Completed" and task.priority != "Overdue"
+        task.priority = "Overdue"
+        task.save(validate: false)
+      else
+      end
+    end
+  end
 end
