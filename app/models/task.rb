@@ -13,7 +13,7 @@ class Task < ApplicationRecord
 
   def self.check_overdue
     @tasks = Task.all
-    currentDate = Date.today.in_time_zone("Singapore")
+    currentDate = Time.now.in_time_zone("Singapore")
     @tasks.each do |task|
       days_left = (Date.strptime(task.deadline.to_s, '%Y-%m-%d') - Date.strptime(currentDate.to_s, '%Y-%m-%d')).to_i
       if days_left < 0 and task.priority != "Completed" and task.priority != "Overdue"
