@@ -8,12 +8,14 @@ class Task < ApplicationRecord
   validates_inclusion_of :priority, :in => %w( Low Medium High Completed Overdue )
   validate :deadline_cannot_be_in_the_past
 
+  # reject if deadline set in the past
   def deadline_cannot_be_in_the_past
     if deadline.present? && deadline < Date.today
       errors.add(:deadline, "can't be in the past")
     end
   end 
 
+  # checks when a task is overdue (runs daily at 12am GMT + 8)
   def self.check_overdue
     @tasks = Task.all
     currentDate = Time.now.in_time_zone("Singapore")

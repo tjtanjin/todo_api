@@ -1,6 +1,7 @@
 class Api::V1::AuthenticationController < ApplicationController
   skip_before_action :authenticate_request
 
+  # Function to authenticate a user and check if the user is verified
   def authenticate
     command = AuthenticateUser.call(params[:email], params[:password])
 

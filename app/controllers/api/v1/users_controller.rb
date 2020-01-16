@@ -57,6 +57,7 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  # set email notifications settings
   def setemailnotifications
     @user.email_notifications = params[:email_notifications]
     if @user.save(validate: false)
@@ -66,6 +67,7 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  # set telegram notifications settings
   def settelegramnotifications
     @user.telegram_notifications = params[:telegram_notifications]
     if @user.save(validate: false)
@@ -75,6 +77,7 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  # send verification email to user
   def sendverification
     if params[:email].blank? # check if email is present
       return render json: {error: 'Email cannot be empty'}, status: 400
@@ -95,6 +98,7 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  # check verification token of user
   def checkverification
     if params[:token].blank?
       return render json: {error: 'Verification token not found'}, status: 400
@@ -116,6 +120,7 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  # set user telegram handle
   def settelegramhandle
     if @user.telegram_id != nil and @user.telegram_handle != params[:telegram_handle]
       @user.telegram_id = nil
@@ -130,6 +135,7 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  # links telegram account with todo manager account if email and telegram handle match
   def checktelegram
     if params[:email].blank?
       return render json: {error: 'Email not found'}, status: 400

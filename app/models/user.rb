@@ -6,15 +6,17 @@ class User < ApplicationRecord
   validates :name, presence: true, length: { minimum: 2, maximum: 24, }
   validate :password_requirements_are_met
 
+  # check if user modification allowed
   def can_modify_user?(user_id)
     role == 'admin' || id.to_s == user_id.to_s
   end
 
-  # This method tells us if the user is an admin or not.
+  # check if user is admin
   def is_admin?
     role == 'admin'
   end
 
+  # check if password requirements are met
   def password_requirements_are_met
     rules = {
       " must contain at least one lowercase letter"  => /[a-z]+/,
@@ -30,32 +32,38 @@ class User < ApplicationRecord
     end
   end
 
+  # generate token to reset password
   def generate_password_token!
     self.reset_password_token = generate_token
     self.reset_password_sent_at = Time.now.utc
     self.save(validate: false)
   end
 
+  # check if password reset token is still valid
   def password_token_valid?
     (self.reset_password_sent_at + 4.hours) > Time.now.utc
   end
 
+  # generate token to verify user on signup
   def generate_verification_token!
     self.verification_token = generate_token
     self.verification_sent_at = Time.now.utc
     self.save(validate: false)
   end
 
+  # check if verification token is still valid
   def verification_token_valid?
     (self.verification_sent_at + 4.hours) > Time.now.utc
   end
 
   private
 
+  # generates a secure token
   def generate_token
    SecureRandom.hex(10)
   end
 
+  # checks when a task is expiring and sends a reminder (runs daily at 12am GMT + 8)
   def self.send_reminders
     @users = User.all
     @users.each do |user|

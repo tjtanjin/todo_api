@@ -1,6 +1,7 @@
 class Api::V1::PasswordsController < ApplicationController
 	skip_before_action :authenticate_request
 
+	# Function to check validity of email and send password reset token to user
 	def forgot
 	  if params[:email].blank? # check if email is present
 	    return render json: {error: 'Please enter your email'}, status: 400
@@ -17,6 +18,7 @@ class Api::V1::PasswordsController < ApplicationController
 	  end
 	end
 
+	# Function to reset password of user when provided with correct token
 	def reset
 	  if params[:token].blank?
 	  	return render json: {error: 'Please enter your password reset token'}, status: 400
