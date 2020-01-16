@@ -1,6 +1,9 @@
 class Task < ApplicationRecord
   belongs_to :user
-  validates :task_name, :task_description, :category, :deadline, presence: true
+  validates :deadline, presence: true
+  validates :task_name, presence: true, length: { maximum: 128, }
+  validates :task_description, presence: true, length: { maximum: 256, }
+  validates :category, presence: true, length: { maximum: 64, }
   validates_uniqueness_of :task_name, scope: :user_id, conditions: -> { where.not(priority: ['Completed', 'Overdue']) }
   validates_inclusion_of :priority, :in => %w( Low Medium High Completed Overdue )
   validate :deadline_cannot_be_in_the_past
