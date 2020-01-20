@@ -67,13 +67,17 @@ class User < ApplicationRecord
   def self.send_reminders
     @users = User.all
     @users.each do |user|
-      if user.email_notifications === "1"
+      if user.email_notifications == "1"
         @tasks = user.task
         expiringtasks = Hash.new
         currentDate = Time.now.in_time_zone("Singapore")
         @tasks.each do |task|
           days_left = (Date.strptime(task.deadline.to_s, '%Y-%m-%d') - Date.strptime(currentDate.to_s, '%Y-%m-%d')).to_i
           if days_left <= 3 and days_left >= 0 and task.priority != "Completed" and task.priority != "Overdue"
+            if days_left == 0
+              days_left = "Today"
+            else
+            end
             expiringtasks[task.task_name] = days_left
           else
           end

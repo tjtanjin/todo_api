@@ -35,6 +35,10 @@ class Api::V1::UsersController < ApplicationController
         @user.save(validate: false)
         render json: { message: 'User successfully updated.' }, status: 200
       else
+        if @user.email != params[:user][:email]
+          @user.verification_token = "0"
+        else
+        end
         if @user.update(user_params)
           render json: { message: 'Profile successfully updated.' }, status: 200
         else
