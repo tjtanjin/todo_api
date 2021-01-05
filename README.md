@@ -89,7 +89,7 @@ SENDGRID_USERNAME
 The names of the variables above are quite self-explanatory and I will not be diving into the details of how to obtain the values for all of them. If you have a strong reason for replicating this project/setting up this Todo API, kindly email me for assistance at: cjtanjin@gmail.com
 
 ### Team
-* [Tan Jin](#https://github.com/tjtanjin)
+* [Tan Jin](https://github.com/tjtanjin)
 
 ### Contributing
 If you have code to contribute to the project, open a pull request and describe clearly the changes and what they are intended to do (enhancement, bug fixes etc). Alternatively, you may simply raise bugs or suggestions by opening an issue.
